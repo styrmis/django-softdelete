@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes import fields
 from django.contrib.auth.models import User, Group, Permission
 import hashlib
 from django.utils import timezone
@@ -214,7 +214,7 @@ class ChangeSet(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    record = generic.GenericForeignKey('content_type', 'object_id')
+    record = fields.GenericForeignKey('content_type', 'object_id')
 
     def get_content(self):
         self.record = self.content_type.model_class().objects.get(pk=self.object_id)
@@ -241,7 +241,7 @@ class SoftDeleteRecord(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    record = generic.GenericForeignKey('content_type', 'object_id')
+    record = fields.GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         unique_together= (('changeset', 'content_type', 'object_id'),)
